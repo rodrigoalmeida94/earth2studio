@@ -242,7 +242,6 @@ class HemisphericCentredBredVector:
         handshake_dim(coords, required_dim="lat", required_index=4)
         handshake_dim(coords, required_dim="lon", required_index=5)
         handshake_size(coords, required_dim="time", required_size=1)
-        handshake_size(coords, required_dim="lead_time", required_size=1)
         if len(shape) != 6:
             raise ValueError("Input tensor and coords need 6 dimensions")
 

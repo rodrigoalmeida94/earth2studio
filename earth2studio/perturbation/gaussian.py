@@ -286,17 +286,22 @@ class CorrelatedSphericalField(torch.nn.Module):
         noises = []
         # iterate over samples in batch
         for _ in range(x.shape[0]):
-            noise = self.isht(self.coeff) * 4 * np.pi  # type: ignore
-            noises.append(noise.reshape(1, 1, 1, self.N, self.nlat, self.nlat * 2))
+            # iterate over lead times in batch
+            times = []
+            for _ in range(x.shape[-4]):
+                noise = self.isht(self.coeff) * 4 * np.pi  # type: ignore
+                times.append(noise.reshape(1, 1, 1, self.N, self.nlat, self.nlat * 2))
 
-            # Sample Gaussian noise. # TODO why??? for next step maybe?
-            xi = self.gaussian_noise.sample(
-                torch.Size((self.N, self.nlat, self.nlat + 1, 2))
-            ).squeeze()
-            xi = torch.view_as_complex(xi)
+                # Sample Gaussian noise. # TODO why??? for next step maybe?
+                xi = self.gaussian_noise.sample(
+                    torch.Size((self.N, self.nlat, self.nlat + 1, 2))
+                ).squeeze()
+                xi = torch.view_as_complex(xi)
 
-            self.coeff = (self.phi * self.coeff) + (self.sigma_n * xi)  # type: ignore
+                self.coeff = (self.phi * self.coeff) + (self.sigma_n * xi)  # type: ignore
 
+            noises.append(torch.cat(times, dim=-4))
+            times = []
         return torch.cat(noises)
 
     def to(self, *args: Any, **kwargs: Any) -> Self:
