@@ -501,7 +501,7 @@ class GraphCastMini(torch.nn.Module, AutoModelMixin, PrognosticMixin):
             Iterator that generates time-steps of the prognostic model container the
             output data tensor and coordinate system dictionary.
         """
-        device = x.device
+
         with jax.default_device(self.get_jax_device_from_tensor(x)):
             batch, target_lead_times = self.from_dataarray_to_dataset(
                 xr.DataArray(x.cpu(), coords=coords), 6
@@ -522,16 +522,7 @@ class GraphCastMini(torch.nn.Module, AutoModelMixin, PrognosticMixin):
                 forcings=forcings,
             )
 
-            yield from (
-                self.to_device(output, device)
-                for output in self._default_generator(x, coords)
-            )
-
-    @staticmethod
-    def to_device(
-        result: tuple[torch.Tensor, CoordSystem], device: torch.device
-    ) -> tuple[torch.Tensor, CoordSystem]:
-        return (result[0].to(device), result[1])
+            yield from self._default_generator(x, coords)
 
     def iterator_result_to_tensor(self, dataset: xr.Dataset) -> torch.Tensor:
         """
@@ -641,7 +632,7 @@ class GraphCastMini(torch.nn.Module, AutoModelMixin, PrognosticMixin):
             # Convert to device
             out = out.to(device)
 
-            return self.to_device((out, output_coords), device)
+            return out, output_coords
 
     def from_dataarray_to_dataset(
         self, data: xr.DataArray, lead_time: int = 6, hour_steps: int = 6
