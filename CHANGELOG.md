@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the asyncio zarr access in the ARCO data source
+- Partially fixed multiple tqdm print outs when using the built in workflows
+- Generalized CorrelatedSphericalGaussian to support input tensors of higher dims
 
 ### Security
 
