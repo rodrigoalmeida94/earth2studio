@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Open-source deep-learning framework for exploring, building and deploying AI weather/climate workflows."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = "~=3.11"
 license = "Apache-2.0"
 dependencies = [
     "cfgrib >= 0.9.10.3",
@@ -28,7 +28,7 @@ dependencies = [
     "torch>=2.5.0",
     "tqdm>=4.65.0",
     "xarray[parallel]>=2023.1.0",
-    "zarr>=2.14.2",
+    "zarr>=3",
     "numcodecs<0.15.0", # TODO: Remove
 ]
 
@@ -73,6 +73,7 @@ statistics = [
 # PX Models
 graphcast = [
     "graphcast",
+    "flax>=0.10.6",
     "dm-haiku==0.0.14",
     "jax[cuda12]>=0.4.26",
 ]
@@ -249,6 +250,7 @@ dev = [
     "types-requests",
     "ruff",
     "pytest-asyncio>=0.26.0",
+    "ipykernel>=6.29.5",
 ]
 docs = [
     "cartopy",
